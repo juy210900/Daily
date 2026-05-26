@@ -1,0 +1,10 @@
+{
+  "diario": ["Desayunar", "Higiene", "Buscar curro", "10min ejercicio", "Levantarse antes de las 11"],
+  "salud": ["Merendar", "Media hora ejercicio", "Acostarse pronto", "Fruta o verdura", "Ducha"],
+  "ocio_habitual": ["Rocket", "Trackmania", "Souls", "Youtube", "Peli miedo", "Peli normal", "Anime", "Serie"],
+  "ocio_nuevo": ["ROM pokemon", "Canto", "Leer", "Escribir"],
+  "caprichos": ["Comida", "Cena", "Shisha", "Cine", "Chuches"],
+  "tareas": ["Recoger cuartos", "Salud dispositivos", "Compra", "Ordenar ropa", "Curro serio", "Organizar fechas proximas", "Whatsapp"],
+  "dias_sin_capricho": 0,
+  "ultimo_gulp_fijo": 0
+}
