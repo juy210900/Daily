@@ -13,7 +13,8 @@ except FileNotFoundError:
 # Separamos las listas del estado del contador
 diario = datos.get("diario", [])
 salud = datos.get("salud", [])
-ocio = datos.get("ocio", [])
+ocio_habitual = datos.get("ocio_habitual", [])
+ocio_nuevo = datos.get("ocio_nuevo", [])
 caprichos = datos.get("caprichos", [])
 tareas = datos.get("tareas", [])
 
@@ -37,10 +38,18 @@ items_seleccionados.extend(diario)
 num_salud = min(random.randint(2, 3), len(salud))
 items_seleccionados.extend(random.sample(salud, num_salud))
 
-# - Ocio: entre 1 y 3 al azar
-num_ocio = min(random.randint(1, 3), len(ocio))
-items_seleccionados.extend(random.sample(ocio, num_ocio))
+# Ocio: 1 nuevo y el resto habituales (Hasta 3 total)
+    num_ocio_total = random.randint(1, 3)
+    if datos["ocio_nuevo"]:
+        items_seleccionados.append(random.choice(datos["ocio_nuevo"]))
+        num_ocio_restante = num_ocio_total - 1
+    else:
+        num_ocio_restante = num_ocio_total
 
+    if num_ocio_restante > 0 and datos["ocio_habitual"]:
+        num_habitual = min(num_ocio_restante, len(datos["ocio_habitual"]))
+        items_seleccionados.extend(random.sample(datos["ocio_habitual"], num_habitual))
+        
 # - Tareas: entre 1 y 3 al azar
 num_tareas = min(random.randint(1, 3), len(tareas))
 items_seleccionados.extend(random.sample(tareas, num_tareas))
