@@ -1,6 +1,8 @@
 import json
 import random
 from datetime import datetime
+import os
+import requests
 
 # 1. Cargar las listas y el histórico de estado
 try:
@@ -38,17 +40,17 @@ items_seleccionados.extend(diario)
 num_salud = min(random.randint(2, 3), len(salud))
 items_seleccionados.extend(random.sample(salud, num_salud))
 
-# Ocio: 1 nuevo y el resto habituales (Hasta 3 total)
+# Ocio: 1 nuevo y el resto habituales (Hasta 3 total) - ¡INDENTACIÓN Y VARIABLES CORREGIDAS!
 num_ocio_total = random.randint(1, 3)
-    if datos["ocio_nuevo"]:
-        items_seleccionados.append(random.choice(datos["ocio_nuevo"]))
-        num_ocio_restante = num_ocio_total - 1
-    else:
-        num_ocio_restante = num_ocio_total
+if ocio_nuevo:
+    items_seleccionados.append(random.choice(ocio_nuevo))
+    num_ocio_restante = num_ocio_total - 1
+else:
+    num_ocio_restante = num_ocio_total
 
-    if num_ocio_restante > 0 and datos["ocio_habitual"]:
-        num_habitual = min(num_ocio_restante, len(datos["ocio_habitual"]))
-        items_seleccionados.extend(random.sample(datos["ocio_habitual"], num_habitual))
+if num_ocio_restante > 0 and ocio_habitual:
+    num_habitual = min(num_ocio_restante, len(ocio_habitual))
+    items_seleccionados.extend(random.sample(ocio_habitual, num_habitual))
         
 # - Tareas: entre 1 y 3 al azar
 num_tareas = min(random.randint(1, 3), len(tareas))
@@ -80,7 +82,6 @@ max_p = random.randint(1, 5)
 karaoke = "SI" if dia_semana in [2, 6] else "NO"
 
 # - Gulp: SI cada 3 días. Resto, 50/50.
-# Incrementamos el contador de días desde el último Gulp
 dias_desde_ultimo_gulp = ultimo_gulp_fijo + 1
 
 if dias_desde_ultimo_gulp >= 3:
@@ -90,7 +91,7 @@ else:
     # No toca por ciclo, se decide al 50/50
     if random.random() < 0.5:
         gulp = "SI"
-        datos["ultimo_gulp_fijo"] = 0  # <--- CORRECCIÓN: Al salir SI, reseteamos el ciclo
+        datos["ultimo_gulp_fijo"] = 0  # Al salir SI, reseteamos el ciclo
     else:
         gulp = "NO"
         datos["ultimo_gulp_fijo"] = dias_desde_ultimo_gulp  # Mantenemos el progreso
@@ -116,20 +117,21 @@ output += f"🔸 Karaoke: {karaoke}\n"
 output += f"🔸 Gulp: {gulp}\n"
 
 # ==========================================
-# ENVÍO A TELEGRAM (Sustituye el antiguo print)
+# ENVÍO A TELEGRAM (Protegido con Secrets para entorno público)
 # ==========================================
-import requests
-
-# Configura aquí tus datos reales
-TELEGRAM_TOKEN = "8406001838:AAGwJqMT7iRSEjNQP_tue_SqurGWHJ_nul4"
-TELEGRAM_CHAT_ID = "8013969980"
+TELEGRAM_TOKEN = os.environ.get("TELEGRAM_TOKEN")
+TELEGRAM_CHAT_ID = os.environ.get("TELEGRAM_CHAT_ID")
 
 def enviar_a_telegram(texto):
+    if not TELEGRAM_TOKEN or not TELEGRAM_CHAT_ID:
+        print("Error: Faltan las variables de entorno de Telegram.")
+        return
+
     url = f"https://api.telegram.org/bot{TELEGRAM_TOKEN}/sendMessage"
     payload = {
         "chat_id": TELEGRAM_CHAT_ID,
         "text": texto,
-        "parse_mode": "Markdown"  # Permite que las negritas y emojis se vean bien
+        "parse_mode": "Markdown"
     }
     
     try:
