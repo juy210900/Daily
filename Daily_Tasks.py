@@ -39,7 +39,7 @@ num_salud = min(random.randint(2, 3), len(salud))
 items_seleccionados.extend(random.sample(salud, num_salud))
 
 # Ocio: 1 nuevo y el resto habituales (Hasta 3 total)
-    num_ocio_total = random.randint(1, 3)
+num_ocio_total = random.randint(1, 3)
     if datos["ocio_nuevo"]:
         items_seleccionados.append(random.choice(datos["ocio_nuevo"]))
         num_ocio_restante = num_ocio_total - 1
